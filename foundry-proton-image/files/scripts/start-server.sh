@@ -13,35 +13,13 @@ fi
 
 echo "---Update SteamCMD---"
 if [ "${USERNAME}" == "" ]; then
-  ${STEAMCMD_DIR}/steamcmd.sh \
+  steamcmd \
   +login anonymous \
   +quit
 else
-  ${STEAMCMD_DIR}/steamcmd.sh \
+  steamcmd \
   +login ${USERNAME} ${PASSWRD} \
   +quit
-fi
-
-echo "---Checking if Proton is installed---"
-if ! [ -f "${ASTEAM_PATH}/compatibilitytools.d/GE-Proton${GE_PROTON_VERSION}/proton" ]; then
-  echo "---Proton not found, installing---"
-  mkdir -p "${ASTEAM_PATH}/compatibilitytools.d" 
-  mkdir -p "${ASTEAM_PATH}/steamapps/compatdata/${APPID}" 
-  mkdir -p "${DATA_DIR}/.steam"
-  ln -s "${STEAMCMD_DIR}/linux32" "${DATA_DIR}/.steam/sdk32" 
-  ln -s "${STEAMCMD_DIR}/linux64" "${DATA_DIR}/.steam/sdk64" 
-  ln -s "${DATA_DIR}/.steam/sdk32/steamclient.so" "${DATA_DIR}/.steam/sdk32/steamservice.so" 
-  ln -s "${DATA_DIR}/.steam/sdk64/steamclient.so" "${DATA_DIR}/.steam/sdk64/steamservice.so" 
-  if ! [ -f "${DATA_DIR}/GE-Proton${GE_PROTON_VERSION}.tgz" ]; then
-     wget "$GE_PROTON_URL" -O "${DATA_DIR}/GE-Proton${GE_PROTON_VERSION}.tgz"
-  fi
-  tar -x -C "${ASTEAM_PATH}/compatibilitytools.d/" -f "${DATA_DIR}/GE-Proton${GE_PROTON_VERSION}.tgz" && \
-  if ! [ -f "${ASTEAM_PATH}/compatibilitytools.d/GE-Proton${GE_PROTON_VERSION}/proton" ]; then
-    echo "---Something went wrong, can't find the executable, putting container into sleep mode!---"
-    sleep infinity
-  fi
-else
-  echo "---Proton already installed---"
 fi
 
 echo "---Updating ${GAME_NAME} Dedicated Server---"
@@ -111,7 +89,7 @@ if [ ! -f ${SERVER_DIR}/FoundryDedicatedServer.exe ]; then
   echo "---Something went wrong, can't find the executable, putting container into sleep mode!---"
   sleep infinity
 else
-  ${ASTEAM_PATH}/compatibilitytools.d/GE-Proton${GE_PROTON_VERSION}/proton run ${SERVER_DIR}/FoundryDedicatedServer.exe ${GAME_PARAMS} &
+  ${ASTEAM_PATH}/GE-Proton${GE_PROTON_VERSION}/proton run ${SERVER_DIR}/FoundryDedicatedServer.bat ${GAME_PARAMS} &
   
   # Find pid for FoundryDedicatedServer.exe
   timeout=0

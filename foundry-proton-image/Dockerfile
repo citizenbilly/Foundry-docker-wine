@@ -7,14 +7,15 @@ ARG CONTAINER_UID=10000
 ENV APPID="2915550"
 ENV GAME_NAME="Foundry"
 
-ENV STEAM_PATH "/home/steam/serverdata"
-ENV SERVER_DIR="$STEAM_PATH/foundry"
-ENV ASTEAM_PATH="/home/steam/serverdata/proton"
+ENV HOME "/home/steam"
+ENV STEAM_PATH "${HOME}/Steam"
+ENV SERVER_DIR="${HOME}/foundry"
+ENV ASTEAM_PATH="${STEAM_PATH}/compatibilitytools.d"
 
-ENV GE_PROTON_VERSION "8-30"
+ENV GE_PROTON_VERSION "9-4"
 ENV GE_PROTON_URL "https://github.com/GloriousEggroll/proton-ge-custom/releases/download/GE-Proton${GE_PROTON_VERSION}/GE-Proton${GE_PROTON_VERSION}.tar.gz"
-ENV STEAM_COMPAT_CLIENT_INSTALL_PATH "$STEAM_PATH"
-ENV STEAM_COMPAT_DATA_PATH "${STEAM_PATH}/steamapps/compatdata/${STEAM_APP_ID}"
+ENV STEAM_COMPAT_CLIENT_INSTALL_PATH "${STEAM_PATH}"
+ENV STEAM_COMPAT_DATA_PATH "${STEAM_PATH}/steamapps/compatdata/${APP_ID}"
 
 COPY files/ /opt/config/default/
 
@@ -40,6 +41,7 @@ RUN groupadd -g $CONTAINER_GID steam \
         locales \
         lib32gcc-s1 \
         steamcmd \
+        vim \
     && ln -s /usr/games/steamcmd /usr/bin/steamcmd \
     && echo 'LANG="en_US.UTF-8"' > /etc/default/locale \
     && echo "en_US.UTF-8 UTF-8" >> /etc/locale.gen \
@@ -51,6 +53,7 @@ RUN groupadd -g $CONTAINER_GID steam \
     && apt-get autoremove -y
 
 RUN chmod +x /opt/config/default/scripts/start-server.sh
+RUN chown steam: -R /home/steam
 
 USER steam
 
@@ -63,10 +66,8 @@ RUN mkdir -p "$SERVER_DIR" \
     && ln -s "${HOME}/.local/share/Steam/steamcmd/linux32" "${HOME}/.steam/sdk32" \
     && ln -s "${HOME}/.local/share/Steam/steamcmd/linux64" "${HOME}/.steam/sdk64" \
     && ln -s "${HOME}/.steam/sdk32/steamclient.so" "${HOME}/.steam/sdk32/steamservice.so" \
-    && ln -s "${HOME}/.steam/sdk64/steamclient.so" "${HOME}/.steam/sdk64/steamservice.so" \
-    && wget "$GE_PROTON_URL" -O "/home/steam/GE-Proton${GE_PROTON_VERSION}.tgz" \
-    && tar -x -C "${STEAM_PATH}/compatibilitytools.d/" -f "/home/steam/GE-Proton${GE_PROTON_VERSION}.tgz" \
-    && rm "/home/steam/GE-Proton${GE_PROTON_VERSION}.tgz"
-
+    && ln -s "${HOME}/.steam/sdk64/steamclient.so" "${HOME}/.steam/sdk64/steamservice.so"\ 
+    && wget "${GE_PROTON_URL}" -O "${HOME}/GE-Proton${GE_PROTON_VERSION}.tgz" \
+    && tar -x -C "${STEAM_PATH}/compatibilitytools.d/" -f "${HOME}/GE-Proton${GE_PROTON_VERSION}.tgz"
 
 CMD ["/opt/config/default/scripts/start-server.sh"]
