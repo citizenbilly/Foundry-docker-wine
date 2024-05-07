@@ -42,9 +42,7 @@ RUN groupadd -g $CONTAINER_GID steam \
         locales \
         lib32gcc-s1 \
         steamcmd \
-        vim \
         tree \
-        steam \
         git \
     && ln -s /usr/games/steamcmd /usr/bin/steamcmd \
     && echo 'LANG="en_US.UTF-8"' > /etc/default/locale \

@@ -31,8 +31,6 @@ else
         echo "---'app.cfg' found---"
 fi
 
-# Wine talks too much and it's annoying
-#export WINEDEBUG=-all
 SteamAppId=983870
 SteamGameId=983870
 echo "983870" > ${SERVER_DIR}/steam_appid.txt
