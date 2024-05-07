@@ -12,10 +12,10 @@ ENV STEAM_PATH "${HOME}/Steam"
 ENV SERVER_DIR="${HOME}/foundry"
 ENV ASTEAM_PATH="${STEAM_PATH}/compatibilitytools.d"
 
-ENV GE_PROTON_VERSION "9-4"
-ENV GE_PROTON_URL "https://github.com/GloriousEggroll/proton-ge-custom/releases/download/GE-Proton${GE_PROTON_VERSION}/GE-Proton${GE_PROTON_VERSION}.tar.gz"
-ENV STEAM_COMPAT_CLIENT_INSTALL_PATH "${STEAM_PATH}"
-ENV STEAM_COMPAT_DATA_PATH "${STEAM_PATH}/steamapps/compatdata/${APP_ID}"
+ENV GE_PROTON_VERSION="9-4"
+ENV GE_PROTON_URL="https://github.com/GloriousEggroll/proton-ge-custom/releases/download/GE-Proton${GE_PROTON_VERSION}/GE-Proton${GE_PROTON_VERSION}.tar.gz"
+ENV STEAM_COMPAT_CLIENT_INSTALL_PATH="${STEAM_PATH}/compatibilitytools.d/GE-Proton${GE_PROTON_VERSION}/"
+ENV STEAM_COMPAT_DATA_PATH="${STEAM_PATH}/steamapps/compatdata/"
 
 COPY files/ /opt/config/default/
 
@@ -31,6 +31,7 @@ RUN groupadd -g $CONTAINER_GID steam \
     && apt-get update \
     && apt-get install --no-install-recommends -y \
         procps \
+        xvfb \
         ca-certificates \
         winbind \
         dbus \
@@ -42,6 +43,9 @@ RUN groupadd -g $CONTAINER_GID steam \
         lib32gcc-s1 \
         steamcmd \
         vim \
+        tree \
+        steam \
+        git \
     && ln -s /usr/games/steamcmd /usr/bin/steamcmd \
     && echo 'LANG="en_US.UTF-8"' > /etc/default/locale \
     && echo "en_US.UTF-8 UTF-8" >> /etc/locale.gen \
@@ -54,6 +58,7 @@ RUN groupadd -g $CONTAINER_GID steam \
 
 RUN chmod +x /opt/config/default/scripts/start-server.sh
 RUN chown steam: -R /home/steam
+RUN /bin/sh -c echo "* hard nice -20" | tee -a /etc/security/limits.conf
 
 USER steam
 
