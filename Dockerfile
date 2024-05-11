@@ -30,20 +30,16 @@ RUN groupadd -g $CONTAINER_GID steam \
     && dpkg --add-architecture i386 \
     && apt-get update \
     && apt-get install --no-install-recommends -y \
-        procps \
         xvfb \
+        libgl1-mesa-glx:i386 \
         ca-certificates \
         winbind \
         dbus \
         libfreetype6 \
-        curl \
         wget \
-        jq \
         locales \
-        lib32gcc-s1 \
+        lib32gcc-s1:i386 \
         steamcmd \
-        tree \
-        git \
     && ln -s /usr/games/steamcmd /usr/bin/steamcmd \
     && echo 'LANG="en_US.UTF-8"' > /etc/default/locale \
     && echo "en_US.UTF-8 UTF-8" >> /etc/locale.gen \

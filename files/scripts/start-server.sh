@@ -36,4 +36,4 @@ SteamGameId=983870
 echo "983870" > ${SERVER_DIR}/steam_appid.txt
 
 Xvfb :0 -screen 0 640x480x24:32 &
-DISPLAY=:0.0 ${ASTEAM_PATH}/GE-Proton${GE_PROTON_VERSION}/proton run ${SERVER_DIR}/FoundryDedicatedServer.exe -log 2>&1
+DISPLAY=:0.0 ${ASTEAM_PATH}/GE-Proton${GE_PROTON_VERSION}/wine ${SERVER_DIR}/FoundryDedicatedServer.exe -log 2>&1
