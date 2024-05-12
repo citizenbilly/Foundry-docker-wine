@@ -1,26 +1,18 @@
-FROM debian:bookworm
+FROM debian:bookworm-slim
 LABEL maintainer="docker@citizenbilly.com"
+
+ENV STEAM_HOME="/home/steam"
+ENV STEAM_PATH="${STEAM_HOME}/Steam"
+ENV SERVER_DIR="${STEAM_HOME}/foundry"
+
+EXPOSE 3724/udp
+EXPOSE 27015/udp
 
 ARG CONTAINER_GID=10000
 ARG CONTAINER_UID=10000
 
 ENV APPID="2915550"
 ENV GAME_NAME="Foundry"
-
-ENV HOME "/home/steam"
-ENV STEAM_PATH "${HOME}/Steam"
-ENV SERVER_DIR="${HOME}/foundry"
-ENV ASTEAM_PATH="${STEAM_PATH}/compatibilitytools.d"
-
-ENV GE_PROTON_VERSION="9-4"
-ENV GE_PROTON_URL="https://github.com/GloriousEggroll/proton-ge-custom/releases/download/GE-Proton${GE_PROTON_VERSION}/GE-Proton${GE_PROTON_VERSION}.tar.gz"
-ENV STEAM_COMPAT_CLIENT_INSTALL_PATH="${STEAM_PATH}/compatibilitytools.d/GE-Proton${GE_PROTON_VERSION}/"
-ENV STEAM_COMPAT_DATA_PATH="${STEAM_PATH}/steamapps/compatdata/"
-
-COPY files/ /opt/config/default/
-
-EXPOSE 3724
-EXPOSE 27015
 
 RUN groupadd -g $CONTAINER_GID steam \
     && useradd -g $CONTAINER_GID -u $CONTAINER_UID -m steam \
@@ -30,16 +22,23 @@ RUN groupadd -g $CONTAINER_GID steam \
     && dpkg --add-architecture i386 \
     && apt-get update \
     && apt-get install --no-install-recommends -y \
-        xvfb \
         ca-certificates \
         winbind \
         dbus \
-        libfreetype6 \
+        procps \
         wget \
+        sudo \
         locales \
+        libfreetype6:i386 \
         lib32gcc-s1 \
         libgl1-mesa-glx \
-        steamcmd
+        lib32stdc++6 \
+        lib32z1 \
+        steamcmd \
+        xvfb \
+        xserver-xorg \
+        libvulkan1:i386 \
+        wine
 
 RUN ln -s /usr/games/steamcmd /usr/bin/steamcmd \
     && echo 'LANG="en_US.UTF-8"' > /etc/default/locale \
@@ -51,23 +50,22 @@ RUN ln -s /usr/games/steamcmd /usr/bin/steamcmd \
     && apt-get clean \
     && apt-get autoremove -y
 
+COPY files/ /opt/config/default/
 RUN chmod +x /opt/config/default/scripts/start-server.sh
-RUN chown steam: -R /home/steam
 RUN /bin/sh -c echo "* hard nice -20" | tee -a /etc/security/limits.conf
+RUN adduser steam sudo
+RUN echo '%sudo ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers
 
 USER steam
 
-RUN mkdir -p "$SERVER_DIR" \
-    && mkdir -p "${SERVER_DIR}/savegame" \
-    && mkdir -p "${STEAM_PATH}/compatibilitytools.d" \
-    && mkdir -p "${STEAM_PATH}/steamapps/compatdata/${STEAM_APP_ID}" \
-    && mkdir -p "${HOME}/.steam" \
+RUN mkdir "${SERVER_DIR}" \
+    && mkdir "${STEAM_PATH}" \
+    && mkdir "${STEAM_HOME}/.steam" \
     && steamcmd +quit \
-    && ln -s "${HOME}/.local/share/Steam/steamcmd/linux32" "${HOME}/.steam/sdk32" \
-    && ln -s "${HOME}/.local/share/Steam/steamcmd/linux64" "${HOME}/.steam/sdk64" \
-    && ln -s "${HOME}/.steam/sdk32/steamclient.so" "${HOME}/.steam/sdk32/steamservice.so" \
-    && ln -s "${HOME}/.steam/sdk64/steamclient.so" "${HOME}/.steam/sdk64/steamservice.so"\ 
-    && wget "${GE_PROTON_URL}" -O "${HOME}/GE-Proton${GE_PROTON_VERSION}.tgz" \
-    && tar -x -C "${STEAM_PATH}/compatibilitytools.d/" -f "${HOME}/GE-Proton${GE_PROTON_VERSION}.tgz"
-
+    && ln -s "${STEAM_HOME}/.local/share/Steam/steamcmd/linux32" "${STEAM_HOME}/.steam/sdk32" \
+    && ln -s "${STEAM_HOME}/.local/share/Steam/steamcmd/linux64" "${STEAM_HOME}/.steam/sdk64" \
+    && ln -s "${STEAM_HOME}/.steam/sdk32/steamclient.so" "${STEAM_HOME}/.steam/sdk32/steamservice.so" \
+    && ln -s "${STEAM_HOME}/.steam/sdk64/steamclient.so" "${STEAM_HOME}/.steam/sdk64/steamservice.so"
+    
+RUN chown -R ${UID}:${GID} -R ${STEAM_HOME}
 CMD ["/opt/config/default/scripts/start-server.sh"]

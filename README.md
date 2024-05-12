@@ -1,19 +1,22 @@
 # Foundry Dedicated Server - Docker Image
-This is my first build of a docker image.
-The end goal is to be able to run a Docker for [Foundry Dedicated Server](https://store.steampowered.com/app/983870/FOUNDRY/) with proton.
 
-By default the image will deploy [Proton GE 9.4](https://github.com/GloriousEggroll/proton-ge-custom/releases/tag/GE-Proton9-4). This may also be changed by seting ```GE_PROTON_VERSION=``` to another version.
+[![Image Size](https://img.shields.io/docker/image-size/citizenbilly/foundry-wine)](https://hub.docker.com/r/citizenbilly/foundry-wine/tags)
 
 
-| Task           | Status  |
-|----------------|---------------|
-| Deploy with Unraid   | WIP |
-| Repalce wine w/proton   |  WIP |
+Steam Link: [Foundry Dedicated Server](https://store.steampowered.com/app/983870/FOUNDRY/). 
 
+## Overview:
 
-### Server Customizations
-The default app.cfg will be provided during the server's initial run.
-Changes may be made to the server configuration with the following variables.
+This is an ongoing build as my first docker image. Base image Debian-bookworm slim and App runs with SteamCMD and Wine.
+
+| Task           | Status  | Notes |
+|----------------|----------|-----|
+| Deploy with Unraid   | Testing | Local Testing Successful|
+| Scheduled Backups   | WIP | N/A|
+| Repalce wine w/proton   |  WIP | [Foundry-docker-proton](https://github.com/citizenbilly/Foundry-docker-proton)
+
+## Server Customizations
+The default app.cfg will be provided during the server's initial run. The following variables may be modified to customize the server configuration.
 
 ## Environment variables
 | Variable           | Default Value|
@@ -24,5 +27,4 @@ SERVER_PASSWORD  |  docker |
 GAME_PORT  |   3724 |
 QUERY_PORT  |   3724 |
 SERVER_IS_PUBLIC    | 27015 |
-MAP_SEED  |   in progress |
-SERVER_SLOTS  |   in progress |
+SERVER_SLOTS  |   16 |
