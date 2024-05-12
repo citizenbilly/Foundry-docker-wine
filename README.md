@@ -1,30 +1,60 @@
 # Foundry Dedicated Server - Docker Image
+[![Steam Game](https://img.shields.io/badge/Steam-Foundry-8A2BE2)](https://store.steampowered.com/app/983870/FOUNDRY/)
+[![Github-Foundry](https://img.shields.io/badge/GitHub-Foundry-green)](https://github.com/citizenbilly/Foundry-docker-wine)
 
 [![Image Size](https://img.shields.io/docker/image-size/citizenbilly/foundry-wine)](https://hub.docker.com/r/citizenbilly/foundry-wine/tags)
 
 
-Steam Link: [Foundry Dedicated Server](https://store.steampowered.com/app/983870/FOUNDRY/). 
-
 ## Overview:
 
-This is an ongoing build as my first docker image. Base image Debian-bookworm slim and App runs with SteamCMD and Wine.
+This is an ongoing build as my first docker image. 
+Base image Debian-bookworm slim and App running with SteamCMD and Wine.
 
-| Task           | Status  | Notes |
-|----------------|----------|-----|
-| Deploy with Unraid   | Testing | Local Testing Successful|
-| Scheduled Backups   | WIP | N/A|
-| Repalce wine w/proton   |  WIP | [Foundry-docker-proton](https://github.com/citizenbilly/Foundry-docker-proton)
+- Server Data Directory: /home/steam/foundry
+- Default Ports:
+    - 27015/UDP
+    - 3724/UDP
 
 ## Server Customizations
-The default app.cfg will be provided during the server's initial run. The following variables may be modified to customize the server configuration.
+The default app.cfg will be provided during the server's initial run. 
+The following Environment edited to customize the server configuration.
 
-## Environment variables
 | Variable           | Default Value|
 |----------------|---------------|
 SERVER_NAME   |  FoundryServer |
-WORLD_NAME    |  FoundryProton |
+WORLD_NAME    |  FoundryWine |
 SERVER_PASSWORD  |  docker |
 GAME_PORT  |   3724 |
 QUERY_PORT  |   3724 |
-SERVER_IS_PUBLIC    | 27015 |
+SERVER_IS_PUBLIC    | false |
 SERVER_SLOTS  |   16 |
+
+
+## Docker Compose
+```
+version: "3"
+services:
+  app:
+    container_name: foundry-dedicated
+    image: citizenbilly/foundry-wine:latest
+    restart: unless-stopped
+    environment:
+      - "SERVER_NAME=Foundry"
+      - "WORLD_NAME=Foundry"
+      - "SERVER_PASSWORD=Youshallnotpass"
+      - "GAME_PORT=3724"
+      - "QUERY_PORT=27015"
+      - "SERVER_IS_PUBLIC=false"
+      - "SERVER_SLOTS=8"
+    ports:
+      - "3724:3724"
+      - "27015:27015"
+```
+
+| Task           | Status  | Notes |
+|----------------|----------|-----|
+| Deployed w/ docker-compose   | Complete |
+| Deployed w/ Unraid   | Complete |
+| Scheduled Backups   | WIP | |
+| Addtional Variables   | WIP | Steam User/Pass, MappSeed|
+| Repalce wine w/proton   |  N/A | N/A
