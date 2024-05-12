@@ -2,9 +2,6 @@
 [![Steam Game](https://img.shields.io/badge/Steam-Foundry-8A2BE2)](https://store.steampowered.com/app/983870/FOUNDRY/)
 [![Github-Foundry](https://img.shields.io/badge/GitHub-Foundry-green)](https://github.com/citizenbilly/Foundry-docker-wine)
 
-# Foundry Dedicated Server - Docker Image
-[![Steam Game](https://img.shields.io/badge/Steam-Foundry-8A2BE2)](https://store.steampowered.com/app/983870/FOUNDRY/)
-[![Github-Foundry](https://img.shields.io/badge/GitHub-Foundry-green)](https://github.com/citizenbilly/Foundry-docker-wine)
 [![Image Size](https://img.shields.io/docker/image-size/citizenbilly/foundry-wine)](https://hub.docker.com/r/citizenbilly/foundry-wine/tags)
 
 
@@ -20,7 +17,7 @@ Base image Debian-bookworm slim and App running with SteamCMD and Wine.
 
 ## Server Customizations
 The default app.cfg will be provided during the server's initial run. 
-The following Environment edited to customize the server configuration.
+The following Environment may be edited to customize the server configuration.
 
 | Variable           | Default Value|
 |----------------|---------------|
@@ -50,8 +47,8 @@ services:
       - "SERVER_IS_PUBLIC=false"
       - "SERVER_SLOTS=8"
     ports:
-      - "3724:3724"
-      - "27015:27015"
+      - "3724:3724/udp"
+      - "27015:27015/udp"
 ```
 
 | Task           | Status  | Notes |
@@ -59,5 +56,5 @@ services:
 | Deployed w/ docker-compose   | Complete |
 | Deployed w/ Unraid   | Complete |
 | Scheduled Backups   | WIP | |
-| Addtional Variables   | WIP | Steam User/Pass, MappSeed|
+| Additional Variables   | WIP | Steam User/Pass, MappSeed|
 | Repalce wine w/proton   |  N/A | N/A
