@@ -1,9 +1,10 @@
 # Foundry Dedicated Server - Docker Image
 
+# Foundry Dedicated Server - Docker Image
+[![Steam Game](https://img.shields.io/badge/Steam-Foundry-8A2BE2)](https://store.steampowered.com/app/983870/FOUNDRY/)
+[![Github-Foundry](https://img.shields.io/badge/GitHub-Foundry-green)](https://github.com/citizenbilly/Foundry-docker-wine)
 [![Image Size](https://img.shields.io/docker/image-size/citizenbilly/foundry-wine)](https://hub.docker.com/r/citizenbilly/foundry-wine/tags)
 
-
-Steam Link: [Foundry Dedicated Server](https://store.steampowered.com/app/983870/FOUNDRY/). 
 
 ## Overview:
 
