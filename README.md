@@ -20,7 +20,7 @@ SERVER_NAME   |  Name of the server listed in the Steam server browser. | Foundr
 WORLD_NAME    |  Server World Name. Used for folder name where save files are stored. |FoundryWine |
 SERVER_PASSWORD  |  Sets the server password. | docker |
 GAME_PORT  |   Network port used by the game. | 3724 |
-QUERY_PORT  | Network port used by the Steam server browser (if Public). | 3724 |
+QUERY_PORT  | Network port used by the Steam server browser (if Public). | 27015 |
 SERVER_IS_PUBLIC | Sets whether the server is listed on the Steam server browser.   | false |
 SERVER_SLOTS  |  Max number of players on the server.  | 16 |
 PAUSE_WHEN_EMPTY |  The server will pause when no player is connected.| false|
@@ -29,7 +29,7 @@ MAPP_SEED | Sets the map seed used to generate the world. | 42938743982 |
 
 ## Docker Compose
 Following is an example of docker-compose file that would allow you to run the container. <br />
-Important Note: Ensure that you are specifying UDP as the protocol for port(s). As Docker will default to tcp.
+Important Note: Ensure that you specify UDP as the protocol for port(s). Docker will default to TCP.
 ```
 version: "3"
 services:
