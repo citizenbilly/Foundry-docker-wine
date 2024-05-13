@@ -1,0 +1,24 @@
+name: Dockerfile Test
+  
+on:
+    push:
+      branches:
+        - '*'
+    pull_request:
+      branches:
+        - master
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+  
+      - name: Build Foundry Docker image
+        run: docker build -t foundryimage-validation .
+
+      - name: Verify Foundry Docker build
+        run: docker inspect foundryimage-validation > /dev/null
+        
+      - name: Remove Foundry Docker image
+        run: docker rmi foundryimage-validation
