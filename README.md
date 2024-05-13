@@ -1,36 +1,35 @@
 # Foundry Dedicated Server - Docker Image
-[![Steam Game](https://img.shields.io/badge/Steam-Foundry-8A2BE2)](https://store.steampowered.com/app/983870/FOUNDRY/)
-[![Github-Foundry](https://img.shields.io/badge/GitHub-Foundry-green)](https://github.com/citizenbilly/Foundry-docker-wine)
+[![Image Size](https://img.shields.io/docker/image-size/citizenbilly/foundry-wine?logo=docker)](https://hub.docker.com/r/citizenbilly/foundry-wine/tags)
+[![Image Pulls](https://img.shields.io/docker/pulls/citizenbilly/foundry-wine?logo=docker)](https://hub.docker.com/r/citizenbilly/foundry-wine/tags)<br />
+[![Github"](https://img.shields.io/badge/GitHub-Foundry%20Docker%20Wine-green?logo=github)](https://github.com/citizenbilly/Foundry-docker-wine)<br />
 
-[![Image Size](https://img.shields.io/docker/image-size/citizenbilly/foundry-wine)](https://hub.docker.com/r/citizenbilly/foundry-wine/tags)
-
+[![Steam Game](https://img.shields.io/badge/Steam-Foundry-8A2BE2?logo=steam)](https://store.steampowered.com/app/983870/FOUNDRY/)<br />
 
 ## Overview:
+This image will provide a running Foundry dedicated server.
 
-This is an ongoing build as my first docker image. 
-Base image Debian-bookworm slim and App running with SteamCMD and Wine.
-
-- Server Data Directory: /home/steam/foundry
-- Default Ports:
-    - 27015/UDP
-    - 3724/UDP
+Debian:Bookworm-slim<br />
 
 ## Server Customizations
-The default app.cfg will be provided during the server's initial run. 
-The following Environment may be edited to customize the server configuration.
+The default app.cfg will be provided during the server's initial run.<br/>
+Environment variables may be edited to customize the server configuration.
 
-| Variable           | Default Value|
-|----------------|---------------|
-SERVER_NAME   |  FoundryServer |
-WORLD_NAME    |  FoundryWine |
-SERVER_PASSWORD  |  docker |
-GAME_PORT  |   3724 |
-QUERY_PORT  |   3724 |
-SERVER_IS_PUBLIC    | false |
-SERVER_SLOTS  |   16 |
+| Variable Name        | Description           | Default Value|
+|----------------|---------------|---------------|
+SERVER_NAME   |  Name of the server listed in the Steam server browser. | FoundryServer |
+WORLD_NAME    |  Server World Name. Used for folder name where save files are stored. |FoundryWine |
+SERVER_PASSWORD  |  Sets the server password. | docker |
+GAME_PORT  |   Network port used by the game. | 3724 |
+QUERY_PORT  | Network port used by the Steam server browser (if Public). | 3724 |
+SERVER_IS_PUBLIC | Sets whether the server is listed on the Steam server browser.   | false |
+SERVER_SLOTS  |  Max number of players on the server.  | 16 |
+PAUSE_WHEN_EMPTY |  The server will pause when no player is connected.| false|
+MAPP_SEED | Sets the map seed used to generate the world. | 42938743982 |
 
 
 ## Docker Compose
+Following is an example of docker-compose file that would allow you to run the container. <br />
+Important Note: Ensure that you are specifying UDP as the protocol for port(s). As Docker will default to tcp.
 ```
 version: "3"
 services:
@@ -51,10 +50,3 @@ services:
       - "27015:27015/udp"
 ```
 
-| Task           | Status  | Notes |
-|----------------|----------|-----|
-| Deployed w/ docker-compose   | Complete |
-| Deployed w/ Unraid   | Complete |
-| Scheduled Backups   | WIP | |
-| Additional Variables   | WIP | Steam User/Pass, MappSeed|
-| Repalce wine w/proton   |  N/A | N/A
